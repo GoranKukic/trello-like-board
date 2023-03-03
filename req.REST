@@ -1,0 +1,9 @@
+POST http://localhost:5500/api/item
+Content-Type: application/json
+
+{
+    "title": "Second task",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "status": "Done",
+    "user": "User 2"
+}
