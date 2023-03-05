@@ -7,20 +7,14 @@ module.exports = {
 "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-
-    // extend: {
-
       colors: {
-      trelloGreen: '#BCE1A4',
-      lightBlack: '#1c1e1f',
       solidGray: "#333",
       lightGray: "#878787",
-      ourServicesText: "#ADADAD",
+      treloText: "#7FA202",
       gray: '#606060',
-      brown: '#B0793F',
       white: '#FFFFFF',
-      'solid-white': '#F8FAFB',
-      grayBackground: '#e0dbcf',
+      lightBlue: '#3b82f6',
+      red:"#B02C37",
     },
 
     screens: {
@@ -41,28 +35,14 @@ module.exports = {
 
       md: { min: '768px' },
       // => @media (min-width: 768px) { ... }
-
-      ipad: { min: '899px' },
-      // => @media (min-width: 768px) { ... }
-
-      lg: { min: '1024px' },
-      // => @media (min-width: 1024px) { ... }
-
-      cont: { min: '1140px' },
-      // => @media (min-width: 1040px) { ... }
-
-      xl: { min: '1280px' },
-      // => @media (min-width: 1280px) { ... }
     },
 
     extend: {
       backgroundImage: {
-        'app-gradient': 'linear-gradient(to top, rgb(219, 234, 254), rgb(147, 197, 253), rgb(59, 130, 246))',
-        'app2-gradient': 'radial-gradient(at right center, rgb(56, 189, 248), rgb(49, 46, 129))'
+        'app-gradient': 'linear-gradient(to top, rgb(219, 234, 254), rgb(147, 197, 253), rgb(59, 130, 246))'        
       },
 
     },
-  // },
   plugins: [],
 }
 }

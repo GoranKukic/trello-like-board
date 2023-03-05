@@ -2,16 +2,21 @@ import { useState, useEffect, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import ItemForm from "../ItemForm/ItemForm";
 import axios from "axios";
+import styles from "./Board.module.css";
 
 function Board() {
   let [isOpen, setIsOpen] = useState(false);
   const [listItems, setListItems] = useState([]);
+  const [itemToEdit, setItemToEdit] = useState(null);
+  const [updateItems, setUpdateItems] = useState(false);
 
+  // functions for closing modal
   function closeModal() {
     setIsOpen(false);
   }
-
-  function openModal() {
+  // functions for opening modal & secting item for edit
+  function openModal(item) {
+    setItemToEdit(item);
     setIsOpen(true);
   }
 
@@ -27,7 +32,17 @@ function Board() {
       }
     };
     getItemsList();
-  }, []);
+    // Clearing update item state
+    setUpdateItems(false);
+  }, [updateItems]);
+
+  const addItemToList = (newItem) => {
+    setListItems((prev) => [...prev, newItem]);
+  };
+
+  const handleUpdateItems = () => {
+    setUpdateItems(true);
+  };
 
   const toDoList = listItems.filter((item) => item.status === "TO-DO");
   const inProgressList = listItems.filter(
@@ -40,13 +55,15 @@ function Board() {
       <div className="max-w-[820px] w-full">
         <div className="bg-solidGray p-4 rounded-[10px] shadow-xl mb-[40px]">
           <h1 className="text-[32px] md:text-[48px] text-center font-semibold leading-[100%] text-white">
-            <span className="text-ourServicesText">Trello </span>Like Board
+            <span className="text-treloText">Trello </span>Like Board
           </h1>
         </div>
         <button
-          className="flex p-2 rounded-[10px] bg-white text-black mb-[40px]"
+          className="flex ml-0 mr-auto justify-center items-center h-[55px] max-w-[150px] w-full text-white text-[16px] font-['Open Sans'] font-semibold
+                           box-border border-2 border-solid border-solidGray rounded-[5px] leading-[155%] cursor-pointer bg-solidGray
+                           transition-colors duration-700 transform hover:bg-white hover:text-solidGray active:bg-lightBlue mb-[40px]"
           type="button"
-          onClick={openModal}
+          onClick={() => openModal()}
         >
           Add item
         </button>
@@ -58,7 +75,7 @@ function Board() {
                 <div
                   className="w-full h-[34px] bg-solidGray text-white text-center rounded-[5px] p-[5px] cursor-pointer hover:opacity-60 transform hover:-translate-y-[2px] duration-500 ease-in-out"
                   key={`${item.id}-${index}`}
-                  onClick={openModal}
+                  onClick={() => openModal(item)}
                 >
                   <p>{item.title}</p>
                 </div>
@@ -72,7 +89,7 @@ function Board() {
                 <div
                   className="w-full h-[34px] bg-solidGray text-white text-center rounded-[5px] p-[5px] cursor-pointer hover:opacity-60 transform hover:-translate-y-[2px] duration-500 ease-in-out"
                   key={`${item.id}-${index}`}
-                  onClick={openModal}
+                  onClick={() => openModal(item)}
                 >
                   <p>{item.title}</p>
                 </div>
@@ -86,6 +103,7 @@ function Board() {
                 <div
                   className="w-full h-[34px] bg-solidGray text-white text-center rounded-[5px] p-[5px] cursor-pointer hover:opacity-60 transform hover:-translate-y-[2px] duration-500 ease-in-out"
                   key={`${item.id}-${index}`}
+                  onClick={() => openModal(item)}
                 >
                   <p>{item.title}</p>
                 </div>
@@ -122,18 +140,15 @@ function Board() {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-[675px] transform overflow-hidden bg-white px-[33px] py-[30px] text-left align-middle shadow-xl transition-all">
-                  <div className="flex justify-between mb-[40px]">
-                    <span className="text-solid-black font-['Prata'] font-normaluppercase text-[18px] xs:text-[24px] md:text-[32px] leading-[165%]">
-                      <span>Title</span>
-                    </span>
+                <Dialog.Panel className="w-full max-w-[675px] transform overflow-hidden bg-white px-[30px] py-[30px] text-left align-middle rounded-[10px] shadow-xl transition-all">
+                  <div className="relative mr-0 ml-auto">
                     <svg
                       width="31"
                       height="31"
                       viewBox="0 0 31 31"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
-                      className={`cursor-pointer`}
+                      className={`${styles.closeButton} cursor-pointer absolute right-0 top-[15px]`}
                       onClick={closeModal}
                     >
                       <path
@@ -146,7 +161,13 @@ function Board() {
                       />
                     </svg>
                   </div>
-                  <ItemForm />
+                  <ItemForm
+                    addItemToList={addItemToList}
+                    onClose={closeModal}
+                    itemToEdit={itemToEdit}
+                    listItems
+                    onUpdateItems={handleUpdateItems}
+                  />
                 </Dialog.Panel>
               </Transition.Child>
             </div>

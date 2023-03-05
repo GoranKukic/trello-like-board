@@ -1,0 +1,7 @@
+.closeButton path {
+  @apply transition duration-500 ease-in-out;
+}
+
+.closeButton:hover path {
+  @apply fill-lightBlue;
+}
