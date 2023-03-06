@@ -61,7 +61,7 @@ const ItemForm = ({
     }
   };
 
-  // Delete item when click on delete
+  // Deleting existing item - sending an HTTP request to an API endpoint using the axios library
   const deleteItem = async (id) => {
     try {
       const res = await axios.delete(`http://localhost:5500/api/item/${id}`);
@@ -164,7 +164,6 @@ const ItemForm = ({
                            box-border border-2 border-solid border-red rounded-sm leading-[155%] cursor-pointer bg-red
                            transition-colors duration-700 transform hover:bg-white hover:text-red active:bg-gray"
                 type="button"
-                // value="Submit"
                 onClick={() => {
                   deleteItem(itemToEdit._id);
                 }}

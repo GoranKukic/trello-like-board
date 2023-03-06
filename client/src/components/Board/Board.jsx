@@ -60,7 +60,7 @@ function Board() {
         </div>
         <button
           className="flex ml-0 mr-auto justify-center items-center h-[55px] max-w-[150px] w-full text-white text-[16px] font-['Open Sans'] font-semibold
-                           box-border border-2 border-solid border-solidGray rounded-[5px] leading-[155%] cursor-pointer bg-solidGray
+                           box-border border-2 border-solid border-solidGray rounded-[5px] leading-[155%] cursor-pointer bg-solidGray shadow-xl
                            transition-colors duration-700 transform hover:bg-white hover:text-solidGray active:bg-lightBlue mb-[40px]"
           type="button"
           onClick={() => openModal()}
@@ -70,7 +70,7 @@ function Board() {
         <div className="flex flex-row gap-[10px] flex-wrap justify-between items-center">
           <div>
             <p className="capitalize">to do:</p>
-            <div className="min-h-[300px] min-w-[200px] w-full bg-white p-[10px] flex flex-col gap-[10px] rounded-[5px]">
+            <div className="min-h-[300px] min-w-[200px] w-full bg-white p-[10px] flex flex-col gap-[10px] rounded-[5px] shadow-xl">
               {toDoList.map((item, index) => (
                 <div
                   className="w-full h-[34px] bg-solidGray text-white text-center rounded-[5px] p-[5px] cursor-pointer hover:opacity-60 transform hover:-translate-y-[2px] duration-500 ease-in-out"
@@ -84,7 +84,7 @@ function Board() {
           </div>
           <div>
             <p className="capitalize">in progress:</p>
-            <div className="min-h-[300px] min-w-[200px] w-full bg-white p-[10px] flex flex-col gap-[10px] rounded-[5px]">
+            <div className="min-h-[300px] min-w-[200px] w-full bg-white p-[10px] flex flex-col gap-[10px] rounded-[5px] shadow-xl">
               {inProgressList.map((item, index) => (
                 <div
                   className="w-full h-[34px] bg-solidGray text-white text-center rounded-[5px] p-[5px] cursor-pointer hover:opacity-60 transform hover:-translate-y-[2px] duration-500 ease-in-out"
@@ -98,7 +98,7 @@ function Board() {
           </div>
           <div>
             <p className="capitalize">done:</p>
-            <div className="min-h-[300px] min-w-[200px] w-full bg-white p-[10px] flex flex-col gap-[10px] rounded-[5px]">
+            <div className="min-h-[300px] min-w-[200px] w-full bg-white p-[10px] flex flex-col gap-[10px] rounded-[5px] shadow-xl">
               {doneList.map((item, index) => (
                 <div
                   className="w-full h-[34px] bg-solidGray text-white text-center rounded-[5px] p-[5px] cursor-pointer hover:opacity-60 transform hover:-translate-y-[2px] duration-500 ease-in-out"
