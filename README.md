@@ -13,11 +13,12 @@ Single page app that:
 - frontend technologies used are: React.js, Tailwind CSS, and few React libraries,
 - backend technologies used are: Node JS, Express & MongoDB.
 - app is responsive down to 250px of viewport
+- app is deployed to Vercel (server and client), link is in "Live preview" section.
 
 
 ##  Live Preview
 
-<!-- [See live here](https://gorankukic-melts.netlify.app)  -->
+[See live here](https://trello-like-board.vercel.app/) 
 
 ## Getting Started
 
