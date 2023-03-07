@@ -1,5 +1,6 @@
 import { useState, useEffect, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import ItemForm from "../ItemForm/ItemForm";
 import axios from "axios";
 import styles from "./Board.module.css";
@@ -9,6 +10,9 @@ function Board() {
   const [listItems, setListItems] = useState([]);
   const [itemToEdit, setItemToEdit] = useState(null);
   const [updateItems, setUpdateItems] = useState(false);
+
+  // state for changing item status via drag & drop
+  const [status, setStatus] = useState(null);
 
   // functions for closing modal
   function closeModal() {
@@ -50,6 +54,13 @@ function Board() {
   );
   const doneList = listItems.filter((item) => item.status === "DONE");
 
+  // pasing item new status to state
+  const updateItemStatus = (result) => {
+    console.log(result);
+    console.log(result.destination.droppableId);
+    setStatus(result.destination.droppableId);
+  };
+
   return (
     <div className="flex flex-col w-full min-h-[100vh] bg-app-gradient justify-center items-center px-4 py-16">
       <div className="max-w-[820px] w-full">
@@ -67,50 +78,142 @@ function Board() {
         >
           Add item
         </button>
-        <div className="flex flex-row gap-[10px] flex-wrap justify-between items-center">
-          <div>
-            <p className="capitalize">to do:</p>
-            <div className="min-h-[300px] min-w-[200px] w-full bg-white p-[10px] flex flex-col gap-[10px] rounded-[5px] shadow-xl">
-              {toDoList.map((item, index) => (
-                <div
-                  className="w-full h-[34px] bg-solidGray text-white text-center rounded-[5px] p-[5px] cursor-pointer hover:opacity-60 transform hover:-translate-y-[2px] duration-500 ease-in-out"
-                  key={`${item.id}-${index}`}
-                  onClick={() => openModal(item)}
-                >
-                  <p>{item.title}</p>
-                </div>
-              ))}
+        <DragDropContext onDragEnd={updateItemStatus}>
+          <div className="flex flex-row gap-[10px] flex-wrap justify-between items-center">
+            <div>
+              <p className="capitalize">to do:</p>
+              <Droppable droppableId="TO-DO" key={"TO-DO"}>
+                {(provided, snapshot) => {
+                  return (
+                    <ul
+                      className="min-h-[300px] min-w-[200px] w-full p-[10px] flex flex-col gap-[10px] rounded-[5px] shadow-xl"
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      style={{
+                        background: snapshot.isDraggingOver
+                          ? "#7FA202"
+                          : "white",
+                      }}
+                    >
+                      {toDoList.map((item, index) => {
+                        return (
+                          <Draggable
+                            key={`${item._id}-${index}`}
+                            draggableId={`${item._id}-${index}`}
+                            index={index}
+                          >
+                            {(provided, snapshot) => {
+                              return (
+                                <li
+                                  className="w-full h-[34px] bg-solidGray text-white text-center rounded-[5px] p-[5px] cursor-pointer hover:opacity-60 transform hover:-translate-y-[2px] duration-500 ease-in-out"
+                                  onClick={() => openModal(item)}
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                >
+                                  <p>{item.title}</p>
+                                </li>
+                              );
+                            }}
+                          </Draggable>
+                        );
+                      })}
+                      {provided.placeholder}
+                    </ul>
+                  );
+                }}
+              </Droppable>
+            </div>
+            <div>
+              <p className="capitalize">in progress:</p>
+              <Droppable droppableId="IN PROGRESS" key={"IN PROGRESS"}>
+                {(provided, snapshot) => {
+                  return (
+                    <ul
+                      className="min-h-[300px] min-w-[200px] w-full p-[10px] flex flex-col gap-[10px] rounded-[5px] shadow-xl"
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      style={{
+                        background: snapshot.isDraggingOver
+                          ? "#7FA202"
+                          : "white",
+                      }}
+                    >
+                      {inProgressList.map((item, index) => {
+                        return (
+                          <Draggable
+                            key={`${item._id}-${index}`}
+                            draggableId={`${item._id}-${index}`}
+                            index={index}
+                          >
+                            {(provided) => {
+                              return (
+                                <li
+                                  className="w-full h-[34px] bg-solidGray text-white text-center rounded-[5px] p-[5px] cursor-pointer hover:opacity-60 transform hover:-translate-y-[2px] duration-500 ease-in-out"
+                                  onClick={() => openModal(item)}
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                >
+                                  <p>{item.title}</p>
+                                </li>
+                              );
+                            }}
+                          </Draggable>
+                        );
+                      })}
+                      {provided.placeholder}
+                    </ul>
+                  );
+                }}
+              </Droppable>
+            </div>
+            <div>
+              <p className="capitalize">done:</p>
+              <Droppable droppableId="DONE" key={"DONE"}>
+                {(provided, snapshot) => {
+                  return (
+                    <ul
+                      className="min-h-[300px] min-w-[200px] w-full p-[10px] flex flex-col gap-[10px] rounded-[5px] shadow-xl"
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      style={{
+                        background: snapshot.isDraggingOver
+                          ? "#7FA202"
+                          : "white",
+                      }}
+                    >
+                      {doneList.map((item, index) => {
+                        return (
+                          <Draggable
+                            key={`${item._id}-${index}`}
+                            draggableId={`${item._id}`}
+                            index={index}
+                          >
+                            {(provided) => {
+                              return (
+                                <li
+                                  className="w-full h-[34px] bg-solidGray text-white text-center rounded-[5px] p-[5px] cursor-pointer hover:opacity-60 transform hover:-translate-y-[2px] duration-500 ease-in-out"
+                                  onClick={() => openModal(item)}
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                >
+                                  <p>{item.title}</p>
+                                </li>
+                              );
+                            }}
+                          </Draggable>
+                        );
+                      })}
+                      {provided.placeholder}
+                    </ul>
+                  );
+                }}
+              </Droppable>
             </div>
           </div>
-          <div>
-            <p className="capitalize">in progress:</p>
-            <div className="min-h-[300px] min-w-[200px] w-full bg-white p-[10px] flex flex-col gap-[10px] rounded-[5px] shadow-xl">
-              {inProgressList.map((item, index) => (
-                <div
-                  className="w-full h-[34px] bg-solidGray text-white text-center rounded-[5px] p-[5px] cursor-pointer hover:opacity-60 transform hover:-translate-y-[2px] duration-500 ease-in-out"
-                  key={`${item.id}-${index}`}
-                  onClick={() => openModal(item)}
-                >
-                  <p>{item.title}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div>
-            <p className="capitalize">done:</p>
-            <div className="min-h-[300px] min-w-[200px] w-full bg-white p-[10px] flex flex-col gap-[10px] rounded-[5px] shadow-xl">
-              {doneList.map((item, index) => (
-                <div
-                  className="w-full h-[34px] bg-solidGray text-white text-center rounded-[5px] p-[5px] cursor-pointer hover:opacity-60 transform hover:-translate-y-[2px] duration-500 ease-in-out"
-                  key={`${item.id}-${index}`}
-                  onClick={() => openModal(item)}
-                >
-                  <p>{item.title}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        </DragDropContext>
       </div>
 
       {/* Modal */}
@@ -167,6 +270,7 @@ function Board() {
                     itemToEdit={itemToEdit}
                     listItems
                     onUpdateItems={handleUpdateItems}
+                    status={status}
                   />
                 </Dialog.Panel>
               </Transition.Child>

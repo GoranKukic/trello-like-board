@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 const ItemForm = ({
@@ -8,14 +8,15 @@ const ItemForm = ({
   listItems,
   setListItems,
   itemToEdit,
-  onUpdateItems
+  onUpdateItems,
+  status,
 }) => {
   // states for deafult values of input fields
   const [itemTitle, setItemTitle] = useState(item?.title || "");
   const [itemDescription, setItemDescription] = useState(
     item?.description || ""
   );
-  const [itemStatus, setItemStatus] = useState(item?.status || "");
+  const [itemStatus, setItemStatus] = useState(item?.status || status);
   const [itemUser, setItemUser] = useState(item?.user || "");
 
   // Adding new item - sending an HTTP request to an API endpoint using the axios library
@@ -60,6 +61,29 @@ const ItemForm = ({
       console.log(err);
     }
   };
+
+  const updateItemStatus = useCallback(
+    async (status) => {
+      try {
+        await axios.put(`http://localhost:5500/api/item/${itemToEdit._id}`, {
+          title: itemTitle === "" ? itemToEdit.title : itemTitle,
+          description:
+            itemDescription === "" ? itemToEdit.description : itemDescription,
+          status: status === null ? itemToEdit.status : status,
+          user: itemUser === "" ? itemToEdit.user : itemUser,
+        });
+        onUpdateItems();
+        console.log("Item status updated successfully.");
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [itemToEdit, itemTitle, itemDescription, itemUser, onUpdateItems]
+  );
+
+  useEffect(() => {
+    updateItemStatus(status);
+  }, [status, updateItemStatus]);
 
   // Deleting existing item - sending an HTTP request to an API endpoint using the axios library
   const deleteItem = async (id) => {
