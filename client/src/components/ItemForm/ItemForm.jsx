@@ -63,6 +63,18 @@ const ItemForm = ({
     }
   };
 
+  // Deleting existing item - sending an HTTP request to an API endpoint using the axios library
+  const deleteItem = async (id) => {
+    try {
+      const res = await axios.delete(`http://localhost:5500/api/item/${id}`);
+      console.log(res.data);
+      onClose();
+      onUpdateItems();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   // const updateItemStatus = useCallback(
   //   async (status) => {
   //     try {
@@ -85,19 +97,6 @@ const ItemForm = ({
   // useEffect(() => {
   //   updateItemStatus(status);
   // }, [status, updateItemStatus]);
-
-  // Deleting existing item - sending an HTTP request to an API endpoint using the axios library
-  // const deleteItem = async (id) => {
-  //   try {
-  //     const res = await axios.delete(`http://localhost:5500/api/item/${id}`);
-  //     const newListItems = listItems.filter((item) => item._id !== id);
-  //     setListItems(newListItems);
-  //     console.log(res.data);
-  //     onClose();
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
 
   return (
     <form onSubmit={itemToEdit ? (e) => updateItem(e) : (e) => addItem(e)}>
@@ -189,9 +188,9 @@ const ItemForm = ({
                            box-border border-2 border-solid border-red rounded-sm leading-[155%] cursor-pointer bg-red
                            transition-colors duration-700 transform hover:bg-white hover:text-red active:bg-gray"
                 type="button"
-                // onClick={() => {
-                //   deleteItem(itemToEdit._id);
-                // }}
+                onClick={() => {
+                  deleteItem(itemToEdit._id);
+                }}
               >
                 Delete
               </button>
