@@ -12,7 +12,8 @@ function Board() {
   const [updateItems, setUpdateItems] = useState(false);
 
   // state for changing item status via drag & drop
-  const [status, setStatus] = useState(null);
+  const [newStatus, setNewStatus] = useState(null);
+  const [itemToEditByDrag, setItemToEditByDrag] = useState(null);
 
   // functions for closing modal
   function closeModal() {
@@ -55,11 +56,34 @@ function Board() {
   const doneList = listItems.filter((item) => item.status === "DONE");
 
   // pasing item new status to state
-  const updateItemStatus = (result) => {
-    console.log(result);
-    console.log(result.destination.droppableId);
-    setStatus(result.destination.droppableId);
+  const updateItemStatus = async (result) => {
+    setNewStatus(result.destination.droppableId);
+    setItemToEditByDrag(result.draggableId);
   };
+
+  //Use effect hook with function for sending http request when state for status is changed via drop
+  useEffect(() => {
+    const updateItemStatusInDatabase = async () => {
+      try {
+        const res = await axios.put(
+          `http://localhost:5500/api/item/${itemToEditByDrag}`,
+          {
+            status: newStatus,
+          }
+        );
+        console.log(res.data);
+        handleUpdateItems();
+        console.log("Item status updated successfully.");
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (newStatus !== null && itemToEditByDrag !== null) {
+      updateItemStatusInDatabase();
+      setNewStatus(null);
+      setItemToEditByDrag(null);
+    }
+  }, [newStatus, itemToEditByDrag]);
 
   return (
     <div className="flex flex-col w-full min-h-[100vh] bg-app-gradient justify-center items-center px-4 py-16">
@@ -79,7 +103,7 @@ function Board() {
           Add item
         </button>
         <DragDropContext onDragEnd={updateItemStatus}>
-          <div className="flex flex-row gap-[10px] flex-wrap justify-between items-center">
+          <div className="flex flex-row gap-[10px] flex-wrap justify-center mp:justify-between items-center">
             <div>
               <p className="capitalize">to do:</p>
               <Droppable droppableId="TO-DO" key={"TO-DO"}>
@@ -98,9 +122,10 @@ function Board() {
                       {toDoList.map((item, index) => {
                         return (
                           <Draggable
-                            key={`${item._id}-${index}`}
-                            draggableId={`${item._id}-${index}`}
+                            key={`${item._id}`}
+                            draggableId={`${item._id}`}
                             index={index}
+                            dropDuration={2000}
                           >
                             {(provided, snapshot) => {
                               return (
@@ -142,9 +167,10 @@ function Board() {
                       {inProgressList.map((item, index) => {
                         return (
                           <Draggable
-                            key={`${item._id}-${index}`}
-                            draggableId={`${item._id}-${index}`}
+                            key={`${item._id}`}
+                            draggableId={`${item._id}`}
                             index={index}
+                            dropDuration={2000}
                           >
                             {(provided) => {
                               return (
@@ -186,9 +212,10 @@ function Board() {
                       {doneList.map((item, index) => {
                         return (
                           <Draggable
-                            key={`${item._id}-${index}`}
+                            key={`${item._id}`}
                             draggableId={`${item._id}`}
                             index={index}
+                            dropDuration={2000}
                           >
                             {(provided) => {
                               return (
@@ -270,7 +297,6 @@ function Board() {
                     itemToEdit={itemToEdit}
                     listItems
                     onUpdateItems={handleUpdateItems}
-                    status={status}
                   />
                 </Dialog.Panel>
               </Transition.Child>
