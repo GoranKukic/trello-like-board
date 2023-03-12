@@ -29,7 +29,9 @@ function Board() {
   useEffect(() => {
     const getItemsList = async () => {
       try {
-        const res = await axios.get("http://localhost:5500/api/items");
+        const res = await axios.get(
+          "https://trello-like-board-api.vercel.app/api/items"
+        );
         setListItems(res.data);
         console.log("render");
       } catch (err) {
@@ -66,7 +68,7 @@ function Board() {
     const updateItemStatusInDatabase = async () => {
       try {
         const res = await axios.put(
-          `http://localhost:5500/api/item/${itemToEditByDrag}`,
+          `https://trello-like-board-api.vercel.app/api/item/${itemToEditByDrag}`,
           {
             status: newStatus,
           }

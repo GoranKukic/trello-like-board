@@ -20,12 +20,15 @@ const ItemForm = ({
   const addItem = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5500/api/item", {
-        title: itemTitle,
-        description: itemDescription,
-        status: itemStatus,
-        user: itemUser,
-      });
+      const res = await axios.post(
+        "https://trello-like-board-api.vercel.app/api/item",
+        {
+          title: itemTitle,
+          description: itemDescription,
+          status: itemStatus,
+          user: itemUser,
+        }
+      );
       addItemToList(res.data);
       setItemTitle("");
       setItemDescription("");
@@ -38,10 +41,11 @@ const ItemForm = ({
   };
 
   // Updating existing item - sending an HTTP request to an API endpoint using the axios library
-  const updateItem = async () => {
+  const updateItem = async (e) => {
+    e.preventDefault();
     try {
       const res = await axios.put(
-        `http://localhost:5500/api/item/${itemToEdit._id}`,
+        `https://trello-like-board-api.vercel.app/api/item/${itemToEdit._id}`,
         {
           title: itemTitle === "" ? itemToEdit.title : itemTitle,
           description:
@@ -53,6 +57,7 @@ const ItemForm = ({
       console.log(res.data);
       onClose();
       onUpdateItems();
+      console.log(itemToEdit.title);
     } catch (err) {
       console.log(err);
     }
@@ -61,14 +66,16 @@ const ItemForm = ({
   // Deleting existing item - sending an HTTP request to an API endpoint using the axios library
   const deleteItem = async (id) => {
     try {
-      const res = await axios.delete(`http://localhost:5500/api/item/${id}`);
+      const res = await axios.delete(
+        `https://trello-like-board-api.vercel.app/api/item/${id}`
+      );
       console.log(res.data);
       onClose();
       onUpdateItems();
     } catch (err) {
       console.log(err);
     }
-  }; 
+  };
 
   return (
     <form onSubmit={itemToEdit ? (e) => updateItem(e) : (e) => addItem(e)}>
